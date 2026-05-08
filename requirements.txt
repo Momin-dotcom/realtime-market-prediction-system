@@ -1,0 +1,10 @@
+yfinance
+feedparser
+praw
+tweepy
+vaderSentiment
+pandas
+numpy
+apache-airflow
+dvc
+dvc-gdrive  # or dvc-gdrive
