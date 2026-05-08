@@ -1,0 +1,14 @@
+artifact_uri: file:D:/New folder/Desktop/MarketPrediction/mlruns/690442589682208349/652337aae399452bb322b5e9dd8903d7/artifacts
+end_time: 1778281011948
+entry_point_name: ''
+experiment_id: '690442589682208349'
+lifecycle_stage: active
+run_id: 652337aae399452bb322b5e9dd8903d7
+run_name: LSTM_tune_u32
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1778281002618
+status: 3
+tags: []
+user_id: Mr.Laptop point
