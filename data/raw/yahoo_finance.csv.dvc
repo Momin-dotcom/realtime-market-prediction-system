@@ -1,0 +1,5 @@
+outs:
+- md5: 785450577ad357eef004c468c5000e24
+  size: 31799
+  hash: md5
+  path: yahoo_finance.csv

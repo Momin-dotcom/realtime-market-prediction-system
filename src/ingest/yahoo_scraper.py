@@ -8,14 +8,22 @@ TICKERS = ["SPY", "AAPL", "BTC-USD"]
 def fetch_yahoo_data(period="7d", interval="1h"):
     all_data = []
     for ticker in TICKERS:
-        df = yf.download(ticker, period=period, interval=interval)
+        df = yf.download(
+            ticker,
+            period=period,
+            interval=interval,
+            multi_level_index=False,
+        )
         df["ticker"] = ticker
         df["source"] = "yahoo_finance"
         df.reset_index(inplace=True)
         all_data.append(df)
     
     combined = pd.concat(all_data, ignore_index=True)
-    combined.columns = [c.lower() for c in combined.columns]
+    combined.columns = [
+        (c[0] if isinstance(c, tuple) else c).lower()
+        for c in combined.columns
+    ]
     
     # compute price direction — this is your target label
     combined["price_change_pct"] = combined.groupby("ticker")["close"].pct_change() * 100

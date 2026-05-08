@@ -1,0 +1,5 @@
+outs:
+- md5: 6e864a1ff40aa11004f8270162300b2a
+  size: 21319
+  hash: md5
+  path: sentiment_labeled.csv

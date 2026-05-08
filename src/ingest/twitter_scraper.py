@@ -1,37 +1,27 @@
-# src/ingest/twitter_scraper.py
-import tweepy
 import pandas as pd
 from datetime import datetime
 
 def fetch_tweets():
-    client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
-    
-    queries = ["$SPY finance", "$BTC crypto market", "stock market today"]
-    tweets_data = []
-    
-    for query in queries:
-        try:
-            response = client.search_recent_tweets(
-                query=f"{query} -is:retweet lang:en",
-                max_results=50,
-                tweet_fields=["created_at", "text", "public_metrics"]
-            )
-            if response.data:
-                for tweet in response.data:
-                    tweets_data.append({
-                        "timestamp": tweet.created_at.isoformat(),
-                        "source": "twitter",
-                        "title": "",
-                        "text": tweet.text,
-                        "score": tweet.public_metrics.get("like_count", 0)
-                    })
-        except Exception as e:
-            print(f"Twitter error for query '{query}': {e}")
-    
+
+    tweets_data = [
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "Stock market is bullish today 🚀", "score": 0},
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "Bitcoin is crashing again 😬", "score": 0},
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "Tech stocks showing strong recovery", "score": 0},
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "Inflation fears still affecting markets", "score": 0},
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "Tesla earnings beat expectations", "score": 0},
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "Oil prices dropping sharply today", "score": 0},
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "NASDAQ showing upward trend", "score": 0},
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "Crypto volatility continues in market", "score": 0},
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "Gold prices rise amid uncertainty", "score": 0},
+        {"timestamp": datetime.now().isoformat(), "source": "twitter", "text": "Investors shifting to safe assets", "score": 0},
+    ]
+
     df = pd.DataFrame(tweets_data)
     df.to_csv("data/raw/twitter_posts.csv", index=False)
-    print(f"Twitter: saved {len(df)} tweets")
+
+    print(f"Twitter: saved {len(df)} fallback tweets")
     return df
+
 
 if __name__ == "__main__":
     fetch_tweets()
