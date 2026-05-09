@@ -13,13 +13,13 @@
             background-color: #f5f5f5;
         }
         h1 { color: #333; }
-        textarea {
+        input {
             width: 100%;
-            height: 150px;
             padding: 10px;
-            font-size: 14px;
+            font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            box-sizing: border-box;
         }
         button {
             margin-top: 10px;
@@ -40,50 +40,60 @@
             border: 1px solid #ddd;
             display: none;
         }
-        .up { color: green; font-weight: bold; }
-        .down { color: red; font-weight: bold; }
+        .up { color: green; font-weight: bold; font-size: 24px; }
+        .down { color: red; font-weight: bold; font-size: 24px; }
+        .loading { color: gray; }
     </style>
 </head>
 <body>
-    <h1>Market Direction Predictor</h1>
-    <p>Paste recent financial news below to predict market direction</p>
+    <h1>📈 Market Direction Predictor</h1>
+    <p>Enter a stock symbol to predict market direction</p>
 
-    <textarea id="news-input" placeholder="Paste financial news or headlines here..."></textarea>
+    <input id="symbol-input" type="text" placeholder="e.g. AAPL, GOOGL, TSLA, MSFT" />
     <br>
-    <button onclick="predict()">Predict Market Direction</button>
+    <button onclick="predict()">Predict</button>
 
     <div id="result">
-        <h3>Prediction Result</h3>
+        <h3>Prediction for <span id="symbol"></span></h3>
         <p>Direction: <span id="direction"></span></p>
         <p>Confidence: <span id="confidence"></span></p>
-        <p>Sentiment: <span id="sentiment"></span></p>
+        <hr>
+        <p>LSTM: <span id="lstm"></span></p>
+        <p>GRU: <span id="gru"></span></p>
+        <p>RNN: <span id="rnn"></span></p>
     </div>
 
     <script>
         async function predict() {
-            const text = document.getElementById("news-input").value;
-            if (!text) {
-                alert("Please enter some news text first");
+            const symbol = document.getElementById("symbol-input").value.trim();
+            if (!symbol) {
+                alert("Please enter a stock symbol");
                 return;
             }
 
+            document.getElementById("result").style.display = "block";
+            document.getElementById("direction").textContent = "Loading...";
+            document.getElementById("direction").className = "loading";
+
             try {
-                const response = await fetch("http://localhost:8000/predict", {
+                const response = await fetch("http://51.20.114.83:8000/predict", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ text: text })
+                    body: JSON.stringify({ symbol: symbol })
                 });
 
                 const data = await response.json();
 
-                document.getElementById("direction").textContent = data.direction.toUpperCase();
-                document.getElementById("direction").className = data.direction === "up" ? "up" : "down";
-                document.getElementById("confidence").textContent = (data.confidence * 100).toFixed(1) + "%";
-                document.getElementById("sentiment").textContent = data.sentiment;
-                document.getElementById("result").style.display = "block";
+                document.getElementById("symbol").textContent = data.symbol;
+                document.getElementById("direction").textContent = data.direction;
+                document.getElementById("direction").className = data.direction.includes("UP") ? "up" : "down";
+                document.getElementById("confidence").textContent = data.confidence + "%";
+                document.getElementById("lstm").textContent = data.lstm_prediction;
+                document.getElementById("gru").textContent = data.gru_prediction;
+                document.getElementById("rnn").textContent = data.rnn_prediction;
 
             } catch (error) {
-                alert("Could not connect to API. Make sure the server is running.");
+                document.getElementById("direction").textContent = "Error connecting to API";
             }
         }
     </script>
