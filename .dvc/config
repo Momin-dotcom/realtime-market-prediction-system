@@ -1,4 +1,5 @@
 [core]
     remote = myremote
 ['remote "myremote"']
-    url = gdrive://1cIEMt3SuOap8QhWfD6mdMEb-V7aP5frR
+    url = s3://financial-sentiment-dvc
+    region = eu-north-1
