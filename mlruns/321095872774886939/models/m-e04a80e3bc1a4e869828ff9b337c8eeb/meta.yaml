@@ -1,0 +1,10 @@
+artifact_location: file:D:/New folder/Desktop/MarketPrediction/mlruns/321095872774886939/models/m-e04a80e3bc1a4e869828ff9b337c8eeb/artifacts
+creation_timestamp: 1778342705237
+experiment_id: '321095872774886939'
+last_updated_timestamp: 1778342716873
+model_id: m-e04a80e3bc1a4e869828ff9b337c8eeb
+model_type: null
+name: RNN_model
+source_run_id: c7bfb3f0c41440c88961e256cb8a9493
+status: 2
+status_message: null

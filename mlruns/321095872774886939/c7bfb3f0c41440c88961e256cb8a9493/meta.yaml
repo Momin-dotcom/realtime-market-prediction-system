@@ -1,0 +1,14 @@
+artifact_uri: file:D:/New folder/Desktop/MarketPrediction/mlruns/321095872774886939/c7bfb3f0c41440c88961e256cb8a9493/artifacts
+end_time: 1778342716882
+entry_point_name: ''
+experiment_id: '321095872774886939'
+lifecycle_stage: active
+run_id: c7bfb3f0c41440c88961e256cb8a9493
+run_name: RNN_u128_d0.3
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1778342698200
+status: 3
+tags: []
+user_id: Mr.Laptop point

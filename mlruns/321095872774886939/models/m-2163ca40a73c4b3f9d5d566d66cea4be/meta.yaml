@@ -1,0 +1,10 @@
+artifact_location: file:D:/New folder/Desktop/MarketPrediction/mlruns/321095872774886939/models/m-2163ca40a73c4b3f9d5d566d66cea4be/artifacts
+creation_timestamp: 1778340653579
+experiment_id: '321095872774886939'
+last_updated_timestamp: 1778340665204
+model_id: m-2163ca40a73c4b3f9d5d566d66cea4be
+model_type: null
+name: LSTM_model
+source_run_id: 84d65261cc4544ca8f03f9dc3aa1f79e
+status: 2
+status_message: null
