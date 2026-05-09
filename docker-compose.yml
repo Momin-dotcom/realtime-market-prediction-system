@@ -6,7 +6,5 @@ services:
       - "8000:8000"
     volumes:
       - ./src:/app/src
-      - ./models:/app/models
-      - ./data:/app/data
     environment:
       - PYTHONUNBUFFERED=1
