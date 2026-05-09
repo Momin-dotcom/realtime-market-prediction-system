@@ -131,7 +131,7 @@ def predict(req: StockRequest):
 
     return {
         "symbol": req.symbol.upper(),
-        "direction": "UP 📈" if avg_pred > 0.53 else "DOWN 📉"
+        "direction": "UP 📈" if avg_pred > 0.53 else "DOWN 📉",
         "confidence": round(avg_pred * 100, 2),
         "lstm_prediction": round(lstm_pred, 4),
         "gru_prediction": round(gru_pred, 4),
