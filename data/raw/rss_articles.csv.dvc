@@ -1,0 +1,5 @@
+outs:
+- md5: b566fb274807e6f0b09f31d406348222
+  size: 20960
+  hash: md5
+  path: rss_articles.csv

@@ -1,0 +1,11 @@
+yfinance
+feedparser
+snscrape
+requests
+pandas
+numpy
+vaderSentiment
+apache-airflow
+dvc
+dvc-s3
+awscli
