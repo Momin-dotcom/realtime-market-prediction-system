@@ -1,11 +1,10 @@
 yfinance
 feedparser
-snscrape
 requests
 pandas
 numpy
 vaderSentiment
-apache-airflow
-dvc
-dvc-s3
-awscli
+tensorflow==2.15.0
+fastapi
+uvicorn
+pydantic
