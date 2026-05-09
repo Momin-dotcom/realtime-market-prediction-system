@@ -5,6 +5,7 @@ import numpy as np
 import keras
 import os
 import yfinance as yf
+import pandas as pd
 
 app = FastAPI()
 
@@ -27,22 +28,42 @@ class StockRequest(BaseModel):
     symbol: str  # e.g. "AAPL", "GOOGL"
 
 def get_stock_features(symbol: str):
-    df = yf.download(symbol, period="30d", interval="1d", progress=False)
+    df = yf.download(symbol, period="30d", interval="1d", progress=False, auto_adjust=True)
     
     if df is None or len(df) < 10:
         raise HTTPException(status_code=400, detail=f"Not enough data for {symbol}")
     
-    df = df.tail(10).copy()
+    # Multi-level columns fix
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
     
-    # Normalize OHLC
-    close_min = df['Close'].min()
-    close_max = df['Close'].max()
+    df = df.tail(10).copy()
     
     def norm(series):
         mn, mx = series.min(), series.max()
         if mx == mn:
-            return series * 0
+            return pd.Series(np.zeros(len(series)), index=series.index)
         return (series - mn) / (mx - mn)
+    
+    features = np.column_stack([
+        norm(df['Open']).values,
+        norm(df['High']).values,
+        norm(df['Low']).values,
+        norm(df['Close']).values,
+        norm(df['Volume']).values,
+        norm(df['Volume']).values,
+        norm(df['High'] - df['Low']).values,
+        norm(df['Close'] - df['Open']).values,
+        norm(df['Close'].rolling(3).mean().bfill()).values,
+        norm(df['Close'].rolling(5).mean().bfill()).values,
+        norm(df['Close'].rolling(7).mean().bfill()).values,
+        norm(df['Close'].diff().fillna(0)).values,
+        norm(df['Volume'].diff().fillna(0)).values,
+        norm(df['High'] - df['Close']).values,
+        np.ones(10),
+    ])
+    
+    return features.reshape(1, 10, 15).astype(np.float32)
     
     features = np.column_stack([
         norm(df['Open']).values,       # 0
