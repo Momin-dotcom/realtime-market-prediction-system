@@ -6,6 +6,8 @@ import keras
 import os
 import yfinance as yf
 import pandas as pd
+import feedparser
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 app = FastAPI()
 
@@ -23,8 +25,33 @@ lstm_model = keras.models.load_model(os.path.join(MODELS_DIR, "best_lstm.keras")
 gru_model = keras.models.load_model(os.path.join(MODELS_DIR, "best_gru.keras"))
 rnn_model = keras.models.load_model(os.path.join(MODELS_DIR, "best_rnn.keras"))
 
+analyzer = SentimentIntensityAnalyzer()
+
 class StockRequest(BaseModel):
     symbol: str
+
+def get_sentiment(symbol: str) -> float:
+    try:
+        url = f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={symbol}&region=US&lang=en-US"
+        feed = feedparser.parse(url)
+
+        if not feed.entries:
+            return 0.5
+
+        scores = []
+        for entry in feed.entries[:10]:
+            text = entry.get("summary", entry.get("title", ""))
+            if text:
+                score = analyzer.polarity_scores(text)['compound']
+                scores.append(score)
+
+        if not scores:
+            return 0.5
+
+        avg_score = float(np.mean(scores))
+        return (avg_score + 1) / 2
+    except:
+        return 0.5
 
 def get_stock_features(symbol: str):
     df = yf.download(symbol, period="60d", interval="1d", progress=False, auto_adjust=True)
@@ -55,7 +82,7 @@ def get_stock_features(symbol: str):
     df['BB_upper'] = df['BB_mid'] + 2 * df['Close'].rolling(20).std()
     df['BB_lower'] = df['BB_mid'] - 2 * df['Close'].rolling(20).std()
 
-    df['sentiment_ratio'] = 0.5
+    df['sentiment_ratio'] = get_sentiment(symbol)
 
     df = df.dropna().tail(10).copy()
 
