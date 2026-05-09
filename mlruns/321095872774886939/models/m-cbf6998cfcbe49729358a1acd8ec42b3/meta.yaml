@@ -1,0 +1,10 @@
+artifact_location: file:D:/New folder/Desktop/MarketPrediction/mlruns/321095872774886939/models/m-cbf6998cfcbe49729358a1acd8ec42b3/artifacts
+creation_timestamp: 1778342822064
+experiment_id: '321095872774886939'
+last_updated_timestamp: 1778342831414
+model_id: m-cbf6998cfcbe49729358a1acd8ec42b3
+model_type: null
+name: GRU_model
+source_run_id: ac38f5acd6f3496f89ab39b4f281f4a4
+status: 2
+status_message: null

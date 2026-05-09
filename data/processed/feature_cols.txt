@@ -1,0 +1,15 @@
+open_scaled
+high_scaled
+low_scaled
+close_scaled
+volume_scaled
+price_change_pct_scaled
+MA_7_scaled
+MA_21_scaled
+RSI_scaled
+MACD_scaled
+MACD_signal_scaled
+BB_mid_scaled
+BB_upper_scaled
+BB_lower_scaled
+sentiment_ratio_scaled

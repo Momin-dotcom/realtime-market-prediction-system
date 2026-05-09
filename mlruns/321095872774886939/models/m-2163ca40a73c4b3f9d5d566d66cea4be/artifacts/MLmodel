@@ -1,0 +1,20 @@
+artifact_path: file:D:/New folder/Desktop/MarketPrediction/mlruns/321095872774886939/models/m-2163ca40a73c4b3f9d5d566d66cea4be/artifacts
+flavors:
+  keras:
+    data: data
+    keras_backend: tensorflow
+    keras_version: 3.14.1
+    save_exported_model: false
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.keras
+    python_version: 3.13.13
+mlflow_version: 3.12.0
+model_id: m-2163ca40a73c4b3f9d5d566d66cea4be
+model_size_bytes: 466922
+model_uuid: m-2163ca40a73c4b3f9d5d566d66cea4be
+prompts: null
+run_id: 84d65261cc4544ca8f03f9dc3aa1f79e
+utc_time_created: '2026-05-09 15:30:53.627064'
