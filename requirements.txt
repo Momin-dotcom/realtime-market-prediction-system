@@ -1,10 +1,11 @@
 yfinance
 feedparser
-praw
-tweepy
-vaderSentiment
+snscrape
+requests
 pandas
 numpy
+vaderSentiment
 apache-airflow
 dvc
-dvc-gdrive  # or dvc-gdrive
+dvc-s3
+awscli
