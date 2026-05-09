@@ -1,0 +1,14 @@
+artifact_uri: file:D:/New folder/Desktop/MarketPrediction/mlruns/321095872774886939/994fe9ed59f346c0b0e6e413006df4c2/artifacts
+end_time: 1778279755235
+entry_point_name: ''
+experiment_id: '321095872774886939'
+lifecycle_stage: active
+run_id: 994fe9ed59f346c0b0e6e413006df4c2
+run_name: GRU_u64_d0.2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1778279730351
+status: 3
+tags: []
+user_id: Mr.Laptop point

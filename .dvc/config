@@ -1,5 +1,0 @@
-[core]
-    remote = myremote
-[remote "myremote"]
-    url = s3://financial-sentiment-dvc
-    region = eu-north-1
