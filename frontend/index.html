@@ -5,97 +5,265 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Market Predictor</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0f1117;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
         }
-        h1 { color: #333; }
-        input {
+
+        .header { text-align: center; margin-bottom: 40px; }
+        .header h1 { font-size: 32px; font-weight: 700; color: #ffffff; letter-spacing: -0.5px; }
+        .header p { font-size: 15px; color: #888; margin-top: 8px; }
+
+        .card {
+            background: #1a1d27;
+            border: 1px solid #2a2d3a;
+            border-radius: 16px;
+            padding: 28px;
             width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
+            max-width: 560px;
+            margin-bottom: 24px;
         }
+
+        .input-row { display: flex; gap: 10px; }
+
+        input[type="text"] {
+            flex: 1;
+            background: #0f1117;
+            border: 1px solid #2a2d3a;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            padding: 12px 16px;
+            outline: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus { border-color: #4f6ef7; }
+        input[type="text"]::placeholder { text-transform: none; letter-spacing: 0; color: #555; }
+
         button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
+            background: #4f6ef7;
+            color: #fff;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
+            transition: background 0.2s, transform 0.1s;
+            white-space: nowrap;
         }
-        button:hover { background-color: #0056b3; }
-        #result {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            display: none;
+
+        button:hover { background: #3d5ce0; }
+        button:active { transform: scale(0.98); }
+        button:disabled { background: #2a2d3a; color: #555; cursor: not-allowed; }
+
+        .result-card { display: none; }
+
+        .direction-box {
+            text-align: center;
+            padding: 24px 0 20px;
+            border-bottom: 1px solid #2a2d3a;
+            margin-bottom: 20px;
         }
-        .up { color: green; font-weight: bold; font-size: 24px; }
-        .down { color: red; font-weight: bold; font-size: 24px; }
-        .loading { color: gray; }
+
+        .symbol-label { font-size: 13px; color: #888; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+
+        .direction-text { font-size: 42px; font-weight: 700; letter-spacing: -1px; }
+        .direction-text.up { color: #22c55e; }
+        .direction-text.down { color: #ef4444; }
+        .direction-text.loading { color: #555; font-size: 24px; }
+
+        .confidence-bar-wrap { margin-top: 12px; }
+
+        .confidence-label { display: flex; justify-content: space-between; font-size: 13px; color: #888; margin-bottom: 6px; }
+        .confidence-val { font-weight: 600; color: #e0e0e0; }
+
+        .bar-bg { background: #0f1117; border-radius: 999px; height: 8px; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
+        .bar-fill.up { background: #22c55e; }
+        .bar-fill.down { background: #ef4444; }
+
+        .models-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+
+        .model-card {
+            background: #0f1117;
+            border: 1px solid #2a2d3a;
+            border-radius: 10px;
+            padding: 14px 12px;
+            text-align: center;
+        }
+
+        .model-name { font-size: 11px; color: #666; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+        .model-val { font-size: 22px; font-weight: 700; color: #fff; }
+        .model-dir { font-size: 12px; margin-top: 4px; }
+        .model-dir.up { color: #22c55e; }
+        .model-dir.down { color: #ef4444; }
+
+        .error-msg { color: #ef4444; font-size: 13px; margin-top: 10px; display: none; }
+
+        .popular-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+        .chip {
+            background: #0f1117;
+            border: 1px solid #2a2d3a;
+            border-radius: 999px;
+            padding: 5px 14px;
+            font-size: 12px;
+            color: #aaa;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .chip:hover { border-color: #4f6ef7; color: #fff; }
+
+        .footer { font-size: 12px; color: #444; margin-top: 16px; text-align: center; }
     </style>
 </head>
 <body>
-    <h1>📈 Market Direction Predictor</h1>
-    <p>Enter a stock symbol to predict market direction</p>
 
-    <input id="symbol-input" type="text" placeholder="e.g. AAPL, GOOGL, TSLA, MSFT" />
-    <br>
-    <button onclick="predict()">Predict</button>
+<div class="header">
+    <h1>Market Direction Predictor</h1>
+    <p>Powered by LSTM, GRU & RNN deep learning models</p>
+</div>
 
-    <div id="result">
-        <h3>Prediction for <span id="symbol"></span></h3>
-        <p>Direction: <span id="direction"></span></p>
-        <p>Confidence: <span id="confidence"></span></p>
-        <hr>
-        <p>LSTM: <span id="lstm"></span></p>
-        <p>GRU: <span id="gru"></span></p>
-        <p>RNN: <span id="rnn"></span></p>
+<div class="card">
+    <div class="input-row">
+        <input type="text" id="symbol-input" placeholder="Enter stock symbol e.g. AAPL" maxlength="10" />
+        <button id="predict-btn" onclick="predict()">Predict</button>
+    </div>
+    <div class="popular-chips">
+        <span class="chip" onclick="quickPredict('AAPL')">AAPL</span>
+        <span class="chip" onclick="quickPredict('TSLA')">TSLA</span>
+        <span class="chip" onclick="quickPredict('MSFT')">MSFT</span>
+        <span class="chip" onclick="quickPredict('GOOGL')">GOOGL</span>
+        <span class="chip" onclick="quickPredict('AMZN')">AMZN</span>
+        <span class="chip" onclick="quickPredict('INTC')">INTC</span>
+    </div>
+    <div class="error-msg" id="error-msg">Could not connect to API. Please try again.</div>
+</div>
+
+<div class="card result-card" id="result-card">
+    <div class="direction-box">
+        <div class="symbol-label" id="symbol-label">—</div>
+        <div class="direction-text" id="direction-text">—</div>
+        <div class="confidence-bar-wrap">
+            <div class="confidence-label">
+                <span>Confidence</span>
+                <span class="confidence-val" id="confidence-val">—</span>
+            </div>
+            <div class="bar-bg">
+                <div class="bar-fill" id="bar-fill" style="width: 0%"></div>
+            </div>
+        </div>
     </div>
 
-    <script>
-        async function predict() {
-            const symbol = document.getElementById("symbol-input").value.trim();
-            if (!symbol) {
-                alert("Please enter a stock symbol");
-                return;
-            }
+    <div class="models-grid">
+        <div class="model-card">
+            <div class="model-name">LSTM</div>
+            <div class="model-val" id="lstm-val">—</div>
+            <div class="model-dir" id="lstm-dir">—</div>
+        </div>
+        <div class="model-card">
+            <div class="model-name">GRU</div>
+            <div class="model-val" id="gru-val">—</div>
+            <div class="model-dir" id="gru-dir">—</div>
+        </div>
+        <div class="model-card">
+            <div class="model-name">RNN</div>
+            <div class="model-val" id="rnn-val">—</div>
+            <div class="model-dir" id="rnn-dir">—</div>
+        </div>
+    </div>
+</div>
 
-            document.getElementById("result").style.display = "block";
-            document.getElementById("direction").textContent = "Loading...";
-            document.getElementById("direction").className = "loading";
+<div class="footer">Real-time data from Yahoo Finance &nbsp;|&nbsp; Sentiment via RSS feeds</div>
 
-            try {
-                const response = await fetch("http://51.20.114.83:8000/predict", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ symbol: symbol })
-                });
+<script>
+    const API_URL = "http://51.20.114.83:8000/predict";
 
-                const data = await response.json();
+    function quickPredict(symbol) {
+        document.getElementById('symbol-input').value = symbol;
+        predict();
+    }
 
-                document.getElementById("symbol").textContent = data.symbol;
-                document.getElementById("direction").textContent = data.direction;
-                document.getElementById("direction").className = data.direction.includes("UP") ? "up" : "down";
-                document.getElementById("confidence").textContent = data.confidence + "%";
-                document.getElementById("lstm").textContent = data.lstm_prediction;
-                document.getElementById("gru").textContent = data.gru_prediction;
-                document.getElementById("rnn").textContent = data.rnn_prediction;
+    async function predict() {
+        const symbol = document.getElementById('symbol-input').value.trim().toUpperCase();
+        if (!symbol) return;
 
-            } catch (error) {
-                document.getElementById("direction").textContent = "Error connecting to API";
-            }
+        const btn = document.getElementById('predict-btn');
+        const errorMsg = document.getElementById('error-msg');
+        const resultCard = document.getElementById('result-card');
+        const directionText = document.getElementById('direction-text');
+
+        btn.disabled = true;
+        btn.textContent = 'Loading...';
+        errorMsg.style.display = 'none';
+
+        resultCard.style.display = 'block';
+        document.getElementById('symbol-label').textContent = symbol;
+        directionText.textContent = 'Analyzing...';
+        directionText.className = 'direction-text loading';
+        document.getElementById('bar-fill').style.width = '0%';
+
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ symbol })
+            });
+
+            if (!res.ok) throw new Error('API error');
+            const data = await res.json();
+
+            const isUp = data.direction.includes('UP');
+            const dirClass = isUp ? 'up' : 'down';
+            const conf = data.confidence;
+
+            directionText.textContent = isUp ? '▲ UP' : '▼ DOWN';
+            directionText.className = `direction-text ${dirClass}`;
+
+            document.getElementById('confidence-val').textContent = conf.toFixed(1) + '%';
+            const fill = document.getElementById('bar-fill');
+            fill.style.width = conf + '%';
+            fill.className = `bar-fill ${dirClass}`;
+
+            setModel('lstm', data.lstm_prediction);
+            setModel('gru', data.gru_prediction);
+            setModel('rnn', data.rnn_prediction);
+
+        } catch (e) {
+            resultCard.style.display = 'none';
+            errorMsg.style.display = 'block';
         }
-    </script>
+
+        btn.disabled = false;
+        btn.textContent = 'Predict';
+    }
+
+    function setModel(name, val) {
+        const isUp = val > 0.55;
+        document.getElementById(`${name}-val`).textContent = (val * 100).toFixed(1) + '%';
+        const dir = document.getElementById(`${name}-dir`);
+        dir.textContent = isUp ? '▲ UP' : '▼ DOWN';
+        dir.className = `model-dir ${isUp ? 'up' : 'down'}`;
+    }
+
+    document.getElementById('symbol-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') predict();
+    });
+</script>
+
 </body>
 </html>
